@@ -1,0 +1,16 @@
+{
+  "name": "@observ33r/jsoncmp",
+  "version": "1.0.0",
+  "license": "MIT",
+  "types": "./dist/index.d.ts",
+  "exports": "./dist/index.mjs",
+  "keywords": ["json", "equal", "equals", "equality", "compare", "structural-equality", "high-performance", "fast"],
+  "description": "Fast and type-safe JSON deep comparison for modern runtimes.",
+  "publish": {
+    "include": [
+      "dist/index.mjs",
+      "dist/index.d.ts",
+      "README.md"
+    ]
+  }
+}

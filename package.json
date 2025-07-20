@@ -1,0 +1,59 @@
+{
+  "name": "jsoncmp",
+  "version": "1.0.0",
+  "description": "Fast and type-safe JSON deep comparison for modern runtimes.",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "json", 
+    "equal", 
+    "equals", 
+    "equality", 
+    "compare", 
+    "structural-equality", 
+    "high-performance", 
+    "fast"
+  ],
+  "author": "David Čuček <observ33r@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/observ33r/jsoncmp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/observ33r/jsoncmp/issues"
+  },
+  "scripts": {
+    "benchmark": "node --experimental-strip-types --expose-gc benchmark/index.ts",
+    "build": "rollup -c",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@mitata/counters": "^0.0.8",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^24.0.15",
+    "@types/deno": "^2.3.0",
+    "@types/bun": "^1.2.19",
+    "fast-equals": "^5.1.3",
+    "lodash-es": "^4.17.21",
+    "dequal": "^2.0.3",
+    "mitata": "^1.0.33",
+    "rollup": "^4.41.1",
+    "rollup-plugin-dts": "^6.2.1",
+    "vitest": "^3.2.4"
+  }
+}
