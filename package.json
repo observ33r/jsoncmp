@@ -4,6 +4,7 @@
   "description": "Fast and type-safe JSON deep comparison for modern runtimes.",
   "type": "module",
   "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -29,7 +30,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/observ33r/jsoncmp.git"
+    "url": "git+https://github.com/observ33r/jsoncmp.git"
   },
   "bugs": {
     "url": "https://github.com/observ33r/jsoncmp/issues"
