@@ -6,7 +6,7 @@
 
 # jsoncmp
 
-Blazing fast and type-safe deep comparison for JSON-compatible data, optimized for modern runtime environments.
+Blazingly fast and type-safe deep comparison for JSON-compatible data, optimized for modern runtime environments.
 
 ## Features
 
@@ -78,7 +78,7 @@ console.log(jsoncmp(target, source)); //true
 
 ## Benchmark
 
-### Big JSON Object (~1.2 MiB, deeply nested)
+**Big JSON Object (~1.2 MiB, deeply nested)**
 
 | Library | Time | Relative Speed |
 | :--- | :--- | :--- |
@@ -148,9 +148,6 @@ summary
 
 </details>
 
-> [!NOTE]  
-> The object is a deeply nested structure (depth: 17) containing objects, arrays, strings, booleans, numbers and nulls. It has a file size of 1.2 MiB, with a root size of 18 and nested sizes ranging from 0 to 21.
-
 ## Running Benchmark
 
 Benchmark uses [mitata](https://github.com/evanwashere/mitata) for performance testing with big JSON Object to reflect realistic real-world scenario.
@@ -158,7 +155,6 @@ Benchmark uses [mitata](https://github.com/evanwashere/mitata) for performance t
 You can run bechmark with:
 
 ```bash
-# Big JSON Object (~1.2 MiB, deeply nested)
 npm run benchmark
 ```
 
