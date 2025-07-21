@@ -1,6 +1,6 @@
 {
     "name": "@observ33r/jsoncmp",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "license": "MIT",
     "exports": "./src/index.ts",
     "keywords": ["json", "equal", "equals", "equality", "compare", "structural-equality", "high-performance", "fast"],
