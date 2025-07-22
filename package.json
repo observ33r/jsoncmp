@@ -5,6 +5,7 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.mjs",
+  "sideEffects": false,
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
