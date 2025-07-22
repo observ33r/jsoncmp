@@ -14,12 +14,8 @@ const isJSC = ((globalThis as any).$?.IsHTMLDDA !== undefined)
     || (isRuntime && process.versions?.webkit !== undefined);
 
 /**
- *  Valid input type for `jsoncmp`.
- * 
- *  Acceptable values include:
- *  - number, string, boolean, null
- *  - arrays of valid values
- *  - plain objects with string keys and valid values
+ *  A value that is valid in a JSON structure: string, number, boolean, null,
+ *  array of JSON values or a plain object with JSON values.
  */
 
 export type JSONCmpValue =
@@ -27,12 +23,24 @@ export type JSONCmpValue =
   | string
   | boolean
   | null
-  | JSONCmpValue[]
-  | { 
-    [key: string]: 
-      | JSONCmpValue 
-      | undefined //allowed only for TS structural compatibility in unions
-    };
+  | JSONCmpArray
+  | JSONCmpObject;
+
+/**
+ *  An array of JSON-compatible values.
+ */
+
+export type JSONCmpArray = JSONCmpValue[];
+
+/**
+ *  A plain object whose property values are all JSON-compatible.
+ */
+
+export interface JSONCmpObject {
+  [key: string]: 
+    | JSONCmpValue
+    | undefined // allowed for structural compatibility in TS (e.g., Partial<T>)
+}
 
 /**
  *  Compares two JSON-compatible values for deep structural equality.
@@ -57,9 +65,9 @@ export default function jsoncmp(target: JSONCmpValue, source: JSONCmpValue): boo
         if (targetLength !== source.length)
             return false;
         for (let index = targetLength - 1; index >= 0; index--) {
-            const targetValue = target[index], sourceValue = source[index];
+            const targetValue = (target as JSONCmpArray)[index], sourceValue = (source as JSONCmpArray)[index];
             if (targetValue === sourceValue
-                || jsoncmp(targetValue, sourceValue))
+                || jsoncmp(targetValue as JSONCmpValue, sourceValue as JSONCmpValue))
                     continue;
             return false;
         }
@@ -71,27 +79,25 @@ export default function jsoncmp(target: JSONCmpValue, source: JSONCmpValue): boo
             return false;
         if (isV8 && targetLength > 1 && targetLength < 20 || isJSC && targetLength < 66)
             for (const key in target) {
-                if (!hasOwnProperty.call(target, key))
-                    continue;
-                const sourceValue = (source as any)[key];
+                const sourceValue = (source as JSONCmpObject)[key];
                 if (sourceValue === undefined 
                     && !hasOwnProperty.call(source, key))
                         return false;
-                const targetValue = (target as any)[key];
+                const targetValue = (target as JSONCmpObject)[key];
                 if (targetValue === sourceValue
-                    || jsoncmp(targetValue, sourceValue))
+                    || jsoncmp(targetValue as JSONCmpValue, sourceValue as JSONCmpValue))
                         continue;
                 return false;
             }
         else
             for (let index = targetLength - 1; index >= 0; index--) {
-                const key = targetKeys[index], sourceValue = (source as any)[key];
+                const key = targetKeys[index], sourceValue = (source as JSONCmpObject)[key];
                 if (sourceValue === undefined 
                     && !hasOwnProperty.call(source, key))
                         return false;
-                const targetValue = (target as any)[key];
+                const targetValue = (target as JSONCmpObject)[key];
                 if (targetValue === sourceValue
-                    || jsoncmp(targetValue, sourceValue))
+                    || jsoncmp(targetValue as JSONCmpValue, sourceValue as JSONCmpValue))
                         continue;
                 return false;
             }
