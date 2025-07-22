@@ -1,5 +1,6 @@
 [![npm](https://img.shields.io/npm/v/jsoncmp.svg)](https://www.npmjs.com/package/jsoncmp)
 [![JSR](https://jsr.io/badges/@observ33r/jsoncmp)](https://jsr.io/@observ33r/jsoncmp)
+[![JSR Score](https://jsr.io/badges/@observ33r/jsoncmp/score)](https://jsr.io/@observ33r/jsoncmp/score)
 [![Size](https://badgen.net/bundlephobia/minzip/jsoncmp)](https://bundlephobia.com/package/jsoncmp)
 [![License](https://img.shields.io/npm/l/jsoncmp.svg)](https://github.com/observ33r/jsoncmp/blob/main/LICENSE)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-ff69b4.svg)](https://www.paypal.com/donate/?hosted_button_id=PPPN7F3VXXE8W)
@@ -70,8 +71,8 @@ function jsoncmp(target: JSONCmpValue, source: JSONCmpValue): boolean
 ```ts
 import jsoncmp from 'jsoncmp';
 
-const target = JSON.parse('{ "a": 1, "b": [2, 3] }');
-const source = JSON.parse('{ "a": 1, "b": [2, 3] }');
+const target = JSON.parse('{ "a": 1, "b": ['2', null, false] }');
+const source = JSON.parse('{ "a": 1, "b": ['2', null, false] }');
 
 console.log(jsoncmp(target, source)); //true
 ```
@@ -148,9 +149,9 @@ summary
 
 </details>
 
-## Running Benchmark
+---
 
-Benchmark uses [mitata](https://github.com/evanwashere/mitata) for performance testing with big JSON Object to reflect realistic real-world scenario.
+Benchmark uses [mitata](https://github.com/evanwashere/mitata) to test performance with [big JSON object](https://github.com/observ33r/jsoncmp/blob/main/benchmark/data.ts) to reflect a realistic real-world scenario.
 
 You can run bechmark with:
 
