@@ -38,17 +38,21 @@ bun install jsoncmp
 ```ts
 import jsoncmp from 'jsoncmp';
 
-type JSONCmpValue =
+export type JSONCmpValue =
   | number
   | string
   | boolean
   | null
-  | JSONCmpValue[]
-  | { 
-    [key: string]: 
-      | JSONCmpValue 
-      | undefined //allowed only for TS structural compatibility in unions
-    };
+  | JSONCmpArray
+  | JSONCmpObject;
+
+export type JSONCmpArray = JSONCmpValue[];
+
+export interface JSONCmpObject {
+  [key: string]: 
+    | JSONCmpValue
+    | undefined
+}
 
 /**
  *  Compares two JSON-compatible values for deep structural equality.
@@ -83,18 +87,19 @@ console.log(jsoncmp(target, source)); //true
 
 | Library | Time | Relative Speed |
 | :--- | :--- | :--- |
-| jsoncmp | 348.80 µs | 1.00x (baseline) |
-| fast-equals | 1.39 ms | 3.99x slower |
-| dequal/lite | 1.54 ms | 4.42x slower |
-| node.isDeepStrictEqual | 2.52 ms | 7.23x slower |
-| JSON.stringify | 4.08 ms | 11.71x slower |
-| lodash.isEqual | 6.47 ms | 18.54x slower |
+| jsoncmp | 341.63 µs | 1.00x (baseline) |
+| fast-equals | 1.38 ms | 4.05x slower |
+| dequal/lite | 1.45 ms | 4.24x slower |
+| node.isDeepStrictEqual | 2.48 ms | 7.25x slower |
+| JSON.stringify | 3.84 ms | 11.24x slower |
+| lodash.isEqual | 6.24 ms | 18.27x slower |
+
 
 <details>
 <summary>Full benchmark result with hardware counters</summary>
 
 ```console
-clk: ~3.69 GHz
+clk: ~3.67 GHz
 cpu: AMD Ryzen 5 3600 6-Core Processor
 runtime: node 24.4.1 (x64-linux)
 
@@ -102,49 +107,49 @@ benchmark                   avg (min … max) p75 / p99    (min … top 1%)
 ------------------------------------------- -------------------------------
 • Big JSON Object (~1.2 MiB, deeply nested)
 ------------------------------------------- -------------------------------
-jsoncmp                      348.80 µs/iter 344.88 µs  █                   
-                    (332.46 µs … 558.35 µs) 534.88 µs  █                   
-                    (403.01 kb …   1.20 mb) 967.86 kb ▄█▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-                   3.11 ipc ( 87.45% cache)   3.20k branch misses
-          1.42M cycles   4.43M instructions  93.73k c-refs  11.76k c-misses
+jsoncmp                      341.63 µs/iter 339.20 µs  █                   
+                    (327.78 µs … 604.35 µs) 534.00 µs  █                   
+                    (382.48 kb …   1.23 mb) 967.89 kb ██▃▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   3.12 ipc ( 87.01% cache)   3.20k branch misses
+          1.39M cycles   4.34M instructions  91.63k c-refs  11.90k c-misses
 
-fast-equals                    1.39 ms/iter   1.38 ms    █                 
-                        (1.32 ms … 1.88 ms)   1.66 ms  ▂ █                 
-                    (851.30 kb …   1.13 mb) 968.70 kb ▂█▆█▇▃▂▂▂▂▁▂▂▁▁▂▁▁▁▁▁
-                   2.70 ipc ( 87.48% cache)  13.06k branch misses
-          5.32M cycles  14.35M instructions 130.36k c-refs  16.31k c-misses
+fast-equals                    1.38 ms/iter   1.44 ms  █                   
+                        (1.26 ms … 1.83 ms)   1.74 ms ██▆ ▂▃               
+                    (763.16 kb …   1.11 mb) 968.27 kb ███▅██▂▃▄▄▃▂▂▂▅▇▃▂▂▂▁
+                   2.69 ipc ( 87.40% cache)  13.65k branch misses
+          5.33M cycles  14.30M instructions 130.47k c-refs  16.44k c-misses
 
-dequal/lite                    1.54 ms/iter   1.52 ms █                    
-                        (1.51 ms … 2.18 ms)   2.02 ms ██                   
-                    (484.92 kb … 690.30 kb) 485.44 kb ██▂▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁
-                   2.48 ipc ( 91.62% cache)  11.82k branch misses
-          5.91M cycles  14.64M instructions 134.45k c-refs  11.27k c-misses
+dequal/lite                    1.45 ms/iter   1.46 ms  █                   
+                        (1.41 ms … 1.80 ms)   1.68 ms  █▂                  
+                    (204.09 kb … 486.02 kb) 484.41 kb ████▇▄▂▃▂▂▂▁▁▁▁▂▁▁▁▁▁
+                   2.62 ipc ( 88.67% cache)  12.31k branch misses
+          5.58M cycles  14.60M instructions 108.22k c-refs  12.26k c-misses
 
-lodash.isEqual                 6.47 ms/iter   6.46 ms  █                   
-                        (6.30 ms … 8.03 ms)   7.42 ms  █                   
-                    (  2.98 mb …   5.56 mb)   4.24 mb ▅██▂▁▆▄▁▂▁▁▁▁▁▁▁▁▁▁▁▁
-                   2.48 ipc ( 97.75% cache)  34.76k branch misses
-         24.94M cycles  61.94M instructions   1.50M c-refs  33.67k c-misses
+lodash.isEqual                 6.24 ms/iter   6.38 ms  ▅      ▄█           
+                        (5.90 ms … 7.82 ms)   6.95 ms  █▇▇    ██▃          
+                    (  3.08 mb …   5.50 mb)   4.23 mb ▅███▇▅▄▇███▆▄▂▄▁▁▁▁▁▂
+                   2.49 ipc ( 97.72% cache)  33.35k branch misses
+         24.77M cycles  61.79M instructions   1.48M c-refs  33.85k c-misses
 
-JSON.stringify                 4.08 ms/iter   4.05 ms   █                  
-                        (3.90 ms … 9.64 ms)   4.99 ms   █                  
-                    (  1.39 mb …   1.40 mb)   1.39 mb ▂▇██▄▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁
-                   2.62 ipc ( 90.97% cache)  50.92k branch misses
-         13.17M cycles  34.50M instructions 428.33k c-refs  38.70k c-misses
+JSON.stringify                 3.84 ms/iter   3.83 ms ██                   
+                        (3.56 ms … 8.55 ms)   5.48 ms ██                   
+                    (  1.39 mb …   1.40 mb)   1.39 mb ██▇█▄▃▄▄▂▁▂▃▁▁▁▁▁▁▁▁▁
+                   2.68 ipc ( 89.46% cache)  51.52k branch misses
+         12.81M cycles  34.38M instructions 422.39k c-refs  44.54k c-misses
 
-node.isDeepStrictEqual         2.52 ms/iter   2.51 ms  █                   
-                        (2.45 ms … 3.40 ms)   3.08 ms  █▂                  
-                    (941.22 kb …   1.96 mb)   1.36 mb ███▄▄▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁
-                   2.69 ipc ( 92.85% cache)  16.52k branch misses
-          9.69M cycles  26.04M instructions 189.83k c-refs  13.58k c-misses
+node.isDeepStrictEqual         2.48 ms/iter   2.47 ms  █▃                  
+                        (2.42 ms … 3.47 ms)   2.96 ms  ██                  
+                    (376.59 kb …   1.80 mb)   1.36 mb ███▄▁▁▁▁▁▂▂▁▁▁▁▁▂▁▁▁▁
+                   2.73 ipc ( 92.25% cache)  16.40k branch misses
+          9.55M cycles  26.06M instructions 187.67k c-refs  14.55k c-misses
 
 summary
   jsoncmp
-   3.99x faster than fast-equals
-   4.42x faster than dequal/lite
-   7.23x faster than node.isDeepStrictEqual
-   11.71x faster than JSON.stringify
-   18.54x faster than lodash.isEqual
+   4.05x faster than fast-equals
+   4.24x faster than dequal/lite
+   7.25x faster than node.isDeepStrictEqual
+   11.24x faster than JSON.stringify
+   18.27x faster than lodash.isEqual
 ```
 
 </details>
