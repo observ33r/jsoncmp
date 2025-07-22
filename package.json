@@ -1,6 +1,6 @@
 {
   "name": "jsoncmp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Fast and type-safe JSON deep comparison for modern runtimes.",
   "type": "module",
   "types": "./dist/index.d.ts",
